@@ -1,17 +1,17 @@
 from  django import forms
 from django.forms import ModelForm
-from .models import Completed,Todo
+from .models import Todo
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 class TodoForm(ModelForm):
     class Meta:
         model=Todo
-        fields="__all__"
+        fields=["task_name"]
         widgets={
-            "created_by":forms.TextInput(attrs={"class":"form-control"}),
+
             "task_name":forms.TextInput(attrs={"class":"form-control"}),
-            "completed":forms.Select(attrs={"class":"form-select"})
+
         }
 
 class TodoSearchForm(forms.Form):

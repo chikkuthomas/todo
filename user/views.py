@@ -3,18 +3,25 @@ from .forms import TodoForm,TodoSearchForm,RegisterationForm,LoginForm
 from django.contrib import messages
 from .models import Todo
 from django.contrib.auth import authenticate,login,logout
-
+#decorators
+from .decorators import singin_required
 # Create your views here.
-def home(request):
+@singin_required
+def home(request,*args,**kwargs):
+
     return render(request,"home.html")
 
-def todo_create(request):
+@singin_required
+def todo_create(request,*args,**kwargs):
     form=TodoForm()
     context={"form":form}
     if request.method=="POST":
         form=TodoForm(request.POST)
         if form.is_valid():
-            form.save()
+            todo=form.save(commit=False)
+            todo.created_by=request.user
+            todo.save()
+
             messages.success(request,"To Do Added Successfully !!")
             return redirect("addtodo")
         else:
@@ -24,8 +31,9 @@ def todo_create(request):
 
     return render(request,"todo_add.html",context)
 
-def todo_list(request):
-    todos=Todo.objects.all()
+@singin_required
+def todo_list(request,*args,**kwargs):
+    todos=Todo.objects.filter(created_by=request.user,completed=False)
     context={}
     form=TodoSearchForm()
     context["todos"]=todos
@@ -43,13 +51,15 @@ def todo_list(request):
 
     return render(request,"todo_list.html",context)
 
-def todo_view(request,id):
+@singin_required
+def todo_view(request,id,*args,**kwargs):
     todo=Todo.objects.get(id=id)
     context={}
     context["todo"]=todo
     return render(request,"todo_view.html",context)
 
-def todo_edit(request,id):
+@singin_required
+def todo_edit(request,id,*args,**kwargs):
     todo=Todo.objects.get(id=id)
     form=TodoForm(instance=todo)
     context = {}
@@ -66,7 +76,8 @@ def todo_edit(request,id):
             return render(request, "todo_edit.html", context)
     return render(request,"todo_edit.html",context)
 
-def todo_remove(request,id):
+@singin_required
+def todo_remove(request,id,*args,**kwargs):
     todo=Todo.objects.get(id=id)
     todo.delete()
     return redirect("todolist")
@@ -101,8 +112,8 @@ def user_login(request):
                 context = {"form": form}
                 return render(request, "signin.html", context)
     return render(request,"signin.html",context)
-
-def user_logout(request):
+@singin_required
+def user_logout(request,*args,**kwargs):
     logout(request)
     return redirect("userregister")
 
