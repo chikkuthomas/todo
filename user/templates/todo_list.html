@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% extends 'base.html'%}
+
+{%block body_block%}
+
+<div class="container">
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4"></div>
+        <div class="col-4">
+            <form action="" class="mb-3" method="POST">
+                {%csrf_token%}
+                {{form.as_p}}
+                <input type="submit" value="Search" class="btn btn-primary">
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8 text-center  shadow p-3">
+            <h1 class="mt-2 mb-4"><i class="fas fa-clipboard-list"></i> ToDo List</h1>
+            <table class="table border table-striped">
+                <thead>
+                <tr>
+                    <th scope="col"><i class="far me-2 fa-user-circle"></i>Created by</th>
+                    <th scope="col"><i class="fas me-2 fa-tasks"></i>Task Name</th>
+                    <th scope="col"><i class="fas me-2 fa-check"></i>Completed</th>
+                    <th scope="col"><i class="fas me-2 fa-angle-double-right"></i>Action</th>
+                </tr>
+                </thead>
+                {% if todos%}
+                {% for todo in todos%}
+                <tbody>
+                <tr>
+                    <th scope="row">{{todo.created_by}}</th>
+                    <td>{{todo.task_name}}</td>
+                    <td>{{todo.completed}}</td>
+                    <td>
+                        <a href="{%url 'todoview' todo.id%}" class="btn btn-outline-success">View</a>
+                        <a href="{%url 'todoupdate' todo.id%}" class="btn btn-outline-primary">Edit</a>
+                        <a href="{%url 'todoremove' todo.id%}" class="btn btn-outline-danger">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+
+                {% endfor%}
+
+                {%else%}
+                 <tr>
+                    <td colspan="4"><em><b>No todos available</b></em> </td>
+                </tr>
+
+                {%endif%}
+
+
+            </table>
+
+        </div>
+        <div class="col-2"></div>
+    </div>
+</div>
+{%endblock%}

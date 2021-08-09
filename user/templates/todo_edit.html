@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+{%extends 'base.html'%}
+
+{% block body_block%}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <h1 class="mb-4"> TODO Update Form</h1>
+            <form action="" method="POST" class="border text-center shadow p-3">
+                {%csrf_token%}
+                {{form.as_p}}
+                <input type="submit" value="Submit" class="btn btn-primary">
+            </form>
+        </div>
+        <div class="col-4"></div>
+
+    </div>
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4">
+            {% if messages%}
+            {%for message in messages%}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <div class="p-5 bg-success text-white border-rounded">
+                {{message}}
+            </div>
+            {%endif%}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <div class="p-2 bg-danger text-white mt-3 rounded">
+                {{message}}
+            </div>
+            {%endif%}
+            {%endfor%}
+            {% endif%}
+        </div>
+        <div class="col-4"></div>
+
+    </div>
+</div>
+
+
+
+{% endblock%}
